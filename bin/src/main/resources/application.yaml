@@ -1,14 +1,13 @@
 spring:
   datasource:
     # Connection url for the database
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mayankdb
+    url: jdbc:mysql://localhost:3306/ssm?useSSL=false
     # Username and password
-    username: mayank
-    password: Noida@115
+    username: root
+    password: root
     # Keep the connection alive if idle for a long time (needed in production)
-    dbcp2:
-      testWhileIdle: true
-      validationQuery: SELECT 1
+    testWhileIdle: true
+    validationQuery: SELECT 1
   jpa:
     # Show or not log for each sql query
     show-sql: false
@@ -16,4 +15,8 @@ spring:
       # Hibernate ddl auto (create, create-drop, update): with "update" the database
       # schema will be automatically updated accordingly to java entities found in
       # the project
-      ddl-auto: update    
+      ddl-auto: update
+    properties:
+      hibernate:
+        # Allows Hibernate to generate SQL optimized for a particular DBMS
+        dialect: org.hibernate.dialect.MySQL5Dialect

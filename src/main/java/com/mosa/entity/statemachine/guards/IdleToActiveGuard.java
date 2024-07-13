@@ -1,12 +1,13 @@
 package com.mosa.entity.statemachine.guards;
 
-import com.mosa.entity.model.Entity;
-import com.mosa.entity.utils.EntityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
+
+import com.mosa.entity.model.EntityT;
+import com.mosa.entity.utils.EntityConstants;
 
 @Component
 public class IdleToActiveGuard implements Guard<String, String> {
@@ -15,7 +16,7 @@ public class IdleToActiveGuard implements Guard<String, String> {
 
   @Override
   public boolean evaluate(StateContext<String, String> context) {
-    Entity entity = (Entity) context.getMessageHeader(EntityConstants.entityHeader);
+    EntityT entity = (EntityT) context.getMessageHeader(EntityConstants.entityHeader);
     if (entity == null) {
       logger.debug("Guard: Wrong transition?");
     } else {

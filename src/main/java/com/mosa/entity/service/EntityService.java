@@ -1,7 +1,7 @@
 package com.mosa.entity.service;
 
 import com.google.common.collect.Lists;
-import com.mosa.entity.model.Entity;
+import com.mosa.entity.model.EntityT;
 import com.mosa.entity.model.EntityEvents;
 import com.mosa.entity.repository.EntityRepository;
 import com.mosa.entity.utils.EntityConstants;
@@ -11,33 +11,35 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntityService {
 
-  @Autowired
-  private EntityRepository entityRepository;
+	@Autowired
+	private EntityRepository entityRepository;
 
-  @Autowired
-  private PersistStateMachineHandler persistStateMachineHandler;
+	@Autowired
+	private PersistStateMachineHandler persistStateMachineHandler;
 
-  public List<Entity> getEntities() {
-    return Lists.newArrayList(entityRepository.findAll());
-  }
+	public List<EntityT> getEntities() {
+		return Lists.newArrayList(entityRepository.findAll());
+	}
 
-  public Entity getEntity(Long id) {
-    return entityRepository.findOne(id);
-  }
+	public EntityT getEntity(Long id) {
+		return entityRepository.findById(id).orElse(null);
+	}
 
-  public Entity createEntity(Entity entity) {
-    return entityRepository.save(entity);
-  }
+	public EntityT createEntity(EntityT entity) {
+		return entityRepository.save(entity);
+	}
 
-  public Boolean updateState(Long id, EntityEvents event) {
-    Entity entity = entityRepository.findOne(id);
-    return persistStateMachineHandler.handleEventWithState(
-        MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity).build(),
-        entity.getState().name()
-    );
-  }
+	@SuppressWarnings("deprecation")
+	public Boolean updateState(Long id, EntityEvents event) {
+		EntityT entity = entityRepository.findById(id).orElse(null);
+
+		return persistStateMachineHandler.handleEventWithState(
+				MessageBuilder.withPayload(event.name()).setHeader(EntityConstants.entityHeader, entity).build(),
+				entity.getState().name());
+	}
 }

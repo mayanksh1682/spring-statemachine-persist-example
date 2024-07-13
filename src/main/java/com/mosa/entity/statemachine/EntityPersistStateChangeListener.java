@@ -1,9 +1,5 @@
 package com.mosa.entity.statemachine;
 
-import com.mosa.entity.model.Entity;
-import com.mosa.entity.model.EntityStates;
-import com.mosa.entity.repository.EntityRepository;
-import com.mosa.entity.utils.EntityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +9,11 @@ import org.springframework.statemachine.recipes.persist.PersistStateMachineHandl
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.stereotype.Component;
+
+import com.mosa.entity.model.EntityT;
+import com.mosa.entity.model.EntityStates;
+import com.mosa.entity.repository.EntityRepository;
+import com.mosa.entity.utils.EntityConstants;
 
 @Component
 public class EntityPersistStateChangeListener implements PersistStateChangeListener {
@@ -28,7 +29,7 @@ public class EntityPersistStateChangeListener implements PersistStateChangeListe
                         Transition<String, String> transition,
                         StateMachine<String, String> stateMachine) {
     if (message != null && message.getHeaders().containsKey(EntityConstants.entityHeader)) {
-      Entity entity = message.getHeaders().get(EntityConstants.entityHeader, Entity.class);
+      EntityT entity = message.getHeaders().get(EntityConstants.entityHeader, EntityT.class);      
       entity.setState(EntityStates.valueOf(state.getId()));
       logger.debug("Persisting: the new entity.. {}", entity);
       entityRepository.save(entity);
